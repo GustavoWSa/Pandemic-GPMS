@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      nuclear-img_0: 970506560385728281
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
