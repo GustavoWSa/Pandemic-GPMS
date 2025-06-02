@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5a2d72c15a623d141ae2796fd5186dc1
+guid: 668a6d20f84833f4ea510bc7c5e80111
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7317536716555363789
-    second: Mapa_rio_0
+      213: 970506560385728281
+    second: nuclear-img_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mapa_rio_0
+      name: nuclear-img_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1406
-        height: 850
+        width: 1920
+        height: 1920
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: dc5292dafdc1d8560800000000000000
-      internalID: 7317536716555363789
+      spriteID: 91f3aff139ee77d00800000000000000
+      internalID: 970506560385728281
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Mapa_rio_0: 7317536716555363789
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
