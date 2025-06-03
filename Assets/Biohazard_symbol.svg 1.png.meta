@@ -272,7 +272,13 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Biohazard_symbol.svg 1_0: -4109376151174988314
+      Biohazard_symbol.svg 1_1: -850209044598015088
+      Biohazard_symbol.svg 1_2: -9053162283122470580
+      Biohazard_symbol.svg 1_3: -8661274112375625836
+      Biohazard_symbol.svg 1_4: 4070667962498115000
+      Biohazard_symbol.svg 1_5: -8044505847272845771
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
