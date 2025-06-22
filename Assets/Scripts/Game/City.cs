@@ -16,6 +16,7 @@ public class City
     public bool isCured = false;
     public bool isOutbreak = false;
     public int outbreakCount = 0;
+    public bool hasResearchStation = false;
     
     [Header("Connections")]
     public List<int> connectedCityIds = new List<int>();
@@ -30,6 +31,7 @@ public class City
         isCured = false;
         isOutbreak = false;
         outbreakCount = 0;
+        hasResearchStation = false;
         
         Debug.Log($"[City] Cidade '{cityName}' criada com ID {cityId}");
     }
@@ -44,6 +46,7 @@ public class City
         isCured = false;
         isOutbreak = false;
         outbreakCount = 0;
+        hasResearchStation = false;
         connectedCityIds = new List<int>();
     }
     
@@ -201,5 +204,33 @@ public class City
             return $"{cityName} [CURADA]";
         else
             return $"{cityName} ({infectionLevel}/{maxInfectionLevel})";
+    }
+    
+    // Método para construir estação de pesquisa
+    public void BuildResearchStation()
+    {
+        if (!hasResearchStation)
+        {
+            hasResearchStation = true;
+            Debug.Log($"[City] Estação de pesquisa construída em {cityName}!");
+        }
+        else
+        {
+            Debug.LogWarning($"[City] Tentativa de construir estação de pesquisa em {cityName} que já possui uma!");
+        }
+    }
+    
+    // Método para remover estação de pesquisa
+    public void RemoveResearchStation()
+    {
+        if (hasResearchStation)
+        {
+            hasResearchStation = false;
+            Debug.Log($"[City] Estação de pesquisa removida de {cityName}.");
+        }
+        else
+        {
+            Debug.LogWarning($"[City] Tentativa de remover estação de pesquisa de {cityName} que não possui uma!");
+        }
     }
 } 
