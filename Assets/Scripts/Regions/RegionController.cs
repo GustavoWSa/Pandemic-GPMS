@@ -1,5 +1,7 @@
+// Arquivo: RegionController.cs
+using System.Collections.Generic;
 using UnityEngine;
-using TMPro; // Necessário para TextMeshPro e TextMeshProUGUI
+using TMPro;
 
 public class RegionController : MonoBehaviour
 {
@@ -8,108 +10,70 @@ public class RegionController : MonoBehaviour
     public int infectionLevel = 0;
     public int maxInfectionLevel = 3;
     public TextMeshProUGUI textMesh;
+    public List<RegionController> adjacentRegions = new List<RegionController>();
 
     void Start()
     {
-        if (string.IsNullOrEmpty(regionName))
-        {
-            regionName = gameObject.name;
-            Debug.LogWarning($"[RegionController] 'Region Name' não definido no Inspector para o GameObject '{gameObject.name}'. Usando o nome do GameObject como fallback: '{regionName}'. É recomendado definir um nome no Inspector.");
-        }
-
-        Debug.Log($"[RegionController] Região '{regionName}' iniciada. Nível de infecção inicial: {infectionLevel}/{maxInfectionLevel}.");
-
-        if (textMesh == null)
-        {
-            textMesh = GetComponent<TextMeshProUGUI>();
-            if (textMesh != null)
-            {
-                Debug.Log($"[RegionController] Componente TextMeshProUGUI atribuído automaticamente para a região '{regionName}'.");
-            }
-            else
-            {
-                Debug.LogError($"[RegionController] Falha ao encontrar o componente TextMeshProUGUI automaticamente na região '{regionName}'. Verifique se ele existe no GameObject e se o tipo está correto (TextMeshProUGUI para UI).");
-            }
-        }
-
-        if (textMesh == null)
-        {
-            Debug.LogWarning($"[RegionController] TextMeshProUGUI não atribuído para a região '{regionName}' no Inspector E não pôde ser encontrado automaticamente. A interface de texto não será atualizada.");
-        }
-
+        if (string.IsNullOrEmpty(regionName)) { regionName = gameObject.name; }
+        if (textMesh == null) { textMesh = GetComponent<TextMeshProUGUI>(); }
         UpdateText();
     }
 
-    public void ApplyEffect(string effect) // <-- MÉTODO PÚBLICO ApplyEffect
+    public void AddCubeAndHandleOutbreak(GameManager gameManager, HashSet<RegionController> outbrokenRegionsInCurrentChain)
     {
-        Debug.Log($"[RegionController] Região '{regionName}' - ApplyEffect chamado com efeito: '{effect}'.");
-        if (string.IsNullOrEmpty(effect))
+        Debug.Log($" PASSO 9: `AddCubeAndHandleOutbreak` foi chamado na região '{this.regionName}'. Nível de infecção atual: {infectionLevel}.");
+        
+        if (outbrokenRegionsInCurrentChain.Contains(this))
         {
-            Debug.LogWarning($"[RegionController] Região '{regionName}' - ApplyEffect chamado com um efeito nulo ou vazio.");
+            Debug.Log($" AVISO: A região '{this.regionName}' já sofreu surto nesta cadeia de eventos. Ignorando.");
             return;
         }
 
-        string effectLower = effect.ToLower();
-        switch (effectLower)
-        {
-            case "infect":
-                Infect();
-                break;
-            case "cure":
-                Cure();
-                break;
-            case "reset":
-                ResetInfection();
-                break;
-            default:
-                Debug.LogWarning($"[RegionController] Região '{regionName}' - Efeito desconhecido recebido: '{effect}'. (Original: '{effect}')");
-                break;
-        }
-    }
-
-    void Infect()
-    {
-        Debug.Log($"[RegionController] Região '{regionName}' - Tentando infectar. Nível atual: {infectionLevel}.");
         if (infectionLevel < maxInfectionLevel)
         {
             infectionLevel++;
-            Debug.Log($"[RegionController] Região '{regionName}' - Nível de infecção aumentado para: {infectionLevel}/{maxInfectionLevel}.");
+            Debug.Log($" PASSO 10: Nível de infecção de '{this.regionName}' aumentado para {infectionLevel}. Chamando `UpdateText`.");
             UpdateText();
         }
         else
         {
-            Debug.Log($"[RegionController] Região '{regionName}' - Já está no nível máximo de infecção ({maxInfectionLevel}).");
+            Debug.LogWarning($" PASSO 10.A: Nível de infecção de '{this.regionName}' já está no máximo. Disparando surto (outbreak)!");
+            TriggerOutbreak(gameManager, outbrokenRegionsInCurrentChain);
         }
     }
 
-    void Cure()
+    private void TriggerOutbreak(GameManager gameManager, HashSet<RegionController> outbrokenRegionsInCurrentChain)
     {
-        Debug.Log($"[RegionController] Região '{regionName}' - Tentando curar. Nível atual: {infectionLevel}.");
-        if (infectionLevel > 0)
-        {
-            infectionLevel--;
-            Debug.Log($"[RegionController] Região '{regionName}' - Nível de infecção diminuído para: {infectionLevel}/{maxInfectionLevel}.");
-            UpdateText();
-        }
-        else
-        {
-            Debug.Log($"[RegionController] Região '{regionName}' - Já está sem infecção.");
-        }
-    }
+        Debug.LogWarning($"--- SURTO EM {regionName}! ---");
+        outbrokenRegionsInCurrentChain.Add(this);
+        gameManager.IncrementOutbreakCounter();
 
-    void ResetInfection()
-    {
-        Debug.Log($"[RegionController] Região '{regionName}' - Resetando infecção. Nível atual: {infectionLevel}.");
-        infectionLevel = 0;
-        Debug.Log($"[RegionController] Região '{regionName}' - Nível de infecção resetado para: {infectionLevel}/{maxInfectionLevel}.");
-        UpdateText();
+        foreach (RegionController neighbor in adjacentRegions)
+        {
+            if (neighbor != null)
+            {
+                Debug.Log($"  > Surto se espalhando de '{regionName}' para o vizinho '{neighbor.regionName}'.");
+                neighbor.AddCubeAndHandleOutbreak(gameManager, outbrokenRegionsInCurrentChain);
+            }
+        }
     }
 
     void UpdateText()
     {
         if (textMesh != null)
         {
+            Debug.Log($" PASSO 11: `UpdateText` na região '{this.regionName}'. Atualizando texto para '{infectionLevel}/{maxInfectionLevel}'.");
             textMesh.text = $"{infectionLevel}/{maxInfectionLevel}";
         }
+        else
+        {
+            Debug.LogError($"PROBLEMA: `UpdateText` na região '{this.regionName}' falhou porque a referência `textMesh` é NULA.");
+        }
     }
+    
+    // Assegure que os outros métodos estejam aqui também
+    public void ApplyEffect(string effect) { /* Lógica se precisar */ }
+    void Infect() { /* Lógica se precisar */ }
+    void Cure() { /* Lógica se precisar */ }
+    void ResetInfection() { /* Lógica se precisar */ }
 }
