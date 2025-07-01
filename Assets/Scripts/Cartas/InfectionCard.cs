@@ -1,3 +1,5 @@
+// Arquivo: InfectionCard.cs
+using System.Collections.Generic;
 using UnityEngine;
 
 public class InfectionCard : Card
@@ -6,33 +8,22 @@ public class InfectionCard : Card
     public string regionName;
     public string effectType = "infect";
 
-    public override void ActivateEffect()
+    public override void ActivateEffect(GameManager gameManagerInstance)
     {
-        Debug.Log($"[InfectionCard] Carta '{cardName}' - ActivateEffect chamado. Alvo: '{regionName}', Efeito: '{effectType}'.");
+        Debug.Log($" PASSO 7: `ActivateEffect` da carta '{cardName}' foi chamado. Tentando encontrar a região '{this.regionName}'.");
 
-        Debug.Log($"[InfectionCard] Procurando todos os RegionControllers na cena...");
-        // RegionController[] allRegions = FindObjectsOfType<RegionController>(); // Linha obsoleta
-        RegionController[] allRegions = FindObjectsByType<RegionController>(FindObjectsSortMode.None); // API Atualizada
-        Debug.Log($"[InfectionCard] Encontrados {allRegions.Length} RegionControllers.");
+        RegionController targetRegion = gameManagerInstance.FindRegionByName(this.regionName);
 
-        bool regionFoundAndEffectApplied = false;
-        foreach (RegionController region in allRegions)
+        if (targetRegion != null)
         {
-            if (region == null) continue;
-
-            if (region.regionName.Equals(this.regionName, System.StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log($"[InfectionCard] Região alvo '{this.regionName}' encontrada (Objeto: {region.gameObject.name}). Aplicando efeito '{effectType}'.");
-                region.ApplyEffect(effectType);
-                Debug.Log($"[InfectionCard] Carta '{cardName}' - Efeito '{effectType}' aplicado com sucesso à região '{this.regionName}'.");
-                regionFoundAndEffectApplied = true;
-                return;
-            }
+            Debug.Log($" PASSO 8: Região '{this.regionName}' encontrada! Chamando `AddCubeAndHandleOutbreak`.");
+            HashSet<RegionController> outbrokenThisAction = new HashSet<RegionController>();
+            targetRegion.AddCubeAndHandleOutbreak(gameManagerInstance, outbrokenThisAction);
+            Debug.Log(" PASSO 8.1: Retornou de `AddCubeAndHandleOutbreak`.");
         }
-
-        if (!regionFoundAndEffectApplied)
+        else
         {
-            Debug.LogWarning($"[InfectionCard] Carta '{cardName}' - Região alvo '{this.regionName}' não encontrada na cena para aplicar o efeito '{effectType}'.");
+            Debug.LogWarning($"PROBLEMA: A região '{this.regionName}' não foi encontrada pelo GameManager.");
         }
     }
 }
