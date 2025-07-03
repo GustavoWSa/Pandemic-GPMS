@@ -1,4 +1,3 @@
-// Arquivo: RegionController.cs
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -15,7 +14,11 @@ public class RegionController : MonoBehaviour
     void Start()
     {
         if (string.IsNullOrEmpty(regionName)) { regionName = gameObject.name; }
-        if (textMesh == null) { textMesh = GetComponent<TextMeshProUGUI>(); }
+        
+        // Esta linha tenta encontrar o texto automaticamente se você não o arrastou no Inspector.
+        // GetComponentInChildren é mais robusto, pois procura nos objetos filhos.
+        if (textMesh == null) { textMesh = GetComponentInChildren<TextMeshProUGUI>(); }
+
         UpdateText();
     }
 
@@ -33,6 +36,15 @@ public class RegionController : MonoBehaviour
         {
             infectionLevel++;
             Debug.Log($" PASSO 10: Nível de infecção de '{this.regionName}' aumentado para {infectionLevel}. Chamando `UpdateText`.");
+            
+            // --- CÓDIGO DE INVESTIGAÇÃO ---
+            // Ele checa se a referência ao texto é nula ANTES de tentar usá-la.
+            if (this.textMesh == null)
+            {
+                Debug.LogError($"[INVESTIGAÇÃO] Na região '{this.regionName}', o campo 'textMesh' ESTÁ NULO exatamente agora!");
+            }
+            // --- FIM DO CÓDIGO DE INVESTIGAÇÃO ---
+
             UpdateText();
         }
         else
@@ -67,11 +79,12 @@ public class RegionController : MonoBehaviour
         }
         else
         {
+            // Este log vai disparar se a referência for nula.
             Debug.LogError($"PROBLEMA: `UpdateText` na região '{this.regionName}' falhou porque a referência `textMesh` é NULA.");
         }
     }
     
-    // Assegure que os outros métodos estejam aqui também
+    // Métodos placeholder que podem ser úteis no futuro
     public void ApplyEffect(string effect) { /* Lógica se precisar */ }
     void Infect() { /* Lógica se precisar */ }
     void Cure() { /* Lógica se precisar */ }

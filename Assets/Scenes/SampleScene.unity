@@ -372,7 +372,11 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 1511080419}
+  - {fileID: 848587758}
+  - {fileID: 594591098}
+  - {fileID: 1218364813}
 --- !u!114 &124106422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -610,50 +614,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 237016273}
   m_CullTransparentMesh: 1
---- !u!1 &327480315
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 327480317}
-  - component: {fileID: 327480316}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &327480316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327480315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 993f1520972e4014c86e8056d9dcae60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &327480317
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327480315}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.3396, y: -4.30371, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &329512798
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,7 +627,7 @@ GameObject:
   - component: {fileID: 329512801}
   - component: {fileID: 329512800}
   m_Layer: 5
-  m_Name: Regiao  3
+  m_Name: Regiao 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -708,7 +668,8 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 1856191135}
 --- !u!114 &329512801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1261,7 +1222,10 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 1218364813}
+  - {fileID: 848587758}
+  - {fileID: 124106421}
 --- !u!114 &594591099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1810,7 +1774,9 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 772266663}
+  - {fileID: 1785520875}
 --- !u!114 &758110783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2063,7 +2029,8 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 758110782}
 --- !u!1 &848587756
 GameObject:
   m_ObjectHideFlags: 0
@@ -2118,7 +2085,9 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 594591098}
+  - {fileID: 124106421}
 --- !u!114 &848587759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2659,7 +2628,9 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 594591098}
+  - {fileID: 124106421}
 --- !u!114 &1218364814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2890,7 +2861,9 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 1856191135}
+  - {fileID: 1941892800}
 --- !u!114 &1506020951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3044,7 +3017,8 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 124106421}
 --- !u!114 &1511080420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3332,7 +3306,8 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 329512800}
 --- !u!114 &1785520876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3486,7 +3461,9 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 329512800}
+  - {fileID: 1506020950}
 --- !u!114 &1856191136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3776,7 +3753,8 @@ MonoBehaviour:
   infectionLevel: 0
   maxInfectionLevel: 3
   textMesh: {fileID: 0}
-  adjacentRegions: []
+  adjacentRegions:
+  - {fileID: 1506020950}
 --- !u!114 &1941892801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3876,6 +3854,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1941892798}
   m_CullTransparentMesh: 1
+--- !u!1 &2004838397
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2004838399}
+  - component: {fileID: 2004838398}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2004838398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004838397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 993f1520972e4014c86e8056d9dcae60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardManager: {fileID: 1732078544}
+  infectionRateValue: 2
+  infectionRateTrack: 02000000020000000200000003000000030000000400000004000000
+  infectionRateTrackIndex: 0
+  outbreakCounter: 0
+--- !u!4 &2004838399
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004838397}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -75.09467, y: -1.65354, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2111576353
 GameObject:
   m_ObjectHideFlags: 0
@@ -4009,55 +4036,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2111576353}
   m_CullTransparentMesh: 1
---- !u!1 &2004838397
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2004838399}
-  - component: {fileID: 2004838398}
-  m_Layer: 0
-  m_Name: GameManager (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2004838398
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2004838397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 993f1520972e4014c86e8056d9dcae60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardManager: {fileID: 1732078544}
-  infectionRateValue: 2
-  infectionRateTrack: 02000000020000000200000003000000030000000400000004000000
-  infectionRateTrackIndex: 0
-  outbreakCounter: 0
---- !u!4 &2004838399
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2004838397}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -75.09467, y: -1.65354, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

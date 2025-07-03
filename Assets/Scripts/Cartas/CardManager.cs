@@ -5,38 +5,39 @@ using UnityEngine;
 public class CardManager : MonoBehaviour
 {
     [Header("Deck Settings")]
-    public List<Card> deck = new List<Card>();
+    [Tooltip("Agora, esta lista funciona como um CATÁLOGO de tipos de cartas possíveis.")]
+    public List<Card> deck = new List<Card>(); // Esta é a sua lista de "tipos"
     public bool shuffleOnStart = true;
 
     private void Start()
     {
+        // Embaralhar o catálogo pode ser útil se você for pegar em sequência, mas para sorteio não faz diferença.
         if (shuffleOnStart) { ShuffleDeck(); }
     }
 
-    public void PlayNextInfectionCard(GameManager gameManagerInstance)
+    /// <summary>
+    /// Este método foi MODIFICADO. Agora ele sorteia um TIPO de carta do deck,
+    /// ativa seu efeito, mas NÃO remove a carta da lista.
+    /// </summary>
+    // Dentro de CardManager.cs
+// ATUALIZE A ASSINATURA DO MÉTODO para receber o HashSet
+public void PlayNextInfectionCard(GameManager gameManagerInstance, HashSet<RegionController> outbrokenThisTurn)
+{
+    if (deck.Count == 0)
     {
-        Debug.Log(" PASSO 4: `PlayNextInfectionCard` no CardManager foi chamado.");
-
-        if (deck.Count == 0)
-        {
-            Debug.LogWarning("PROBLEMA: O baralho de infecção está vazio. Não há cartas para comprar.");
-            return;
-        }
-        Debug.Log($" PASSO 5: O baralho tem {deck.Count} cartas. Pegando a do topo.");
-
-        Card topCard = deck[0];
-        deck.RemoveAt(0);
-        
-        if (topCard == null)
-        {
-            Debug.LogError("PROBLEMA: A carta pega do baralho é NULA. Verifique se os slots no deck no Inspector estão preenchidos.");
-            return;
-        }
-
-        Debug.Log($" PASSO 6: A carta '{topCard.cardName}' foi pega. Chamando `ActivateEffect` nela.");
-        topCard.ActivateEffect(gameManagerInstance);
-        Debug.Log(" PASSO 6.1: Retornou da chamada `ActivateEffect`.");
+        Debug.LogWarning("PROBLEMA: O catálogo de cartas está vazio.");
+        return;
     }
+    
+    int randomIndex = Random.Range(0, deck.Count);
+    Card randomCardType = deck[randomIndex];
+
+    if (randomCardType != null)
+    {
+        // PASSA A MESMA LISTA PARA O MÉTODO DA CARTA
+        randomCardType.ActivateEffect(gameManagerInstance, outbrokenThisTurn);
+    }
+}
     
     public void ShuffleDeck()
     {
