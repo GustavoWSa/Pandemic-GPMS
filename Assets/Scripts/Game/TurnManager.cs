@@ -1,233 +1,214 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq; 
 
 public class TurnManager : MonoBehaviour
 {
-    [Header("Turn Settings")]
+    [Header("Configurações de Turno")]
     public int actionsPerTurn = 4;
     public int currentTurn = 1;
     public int currentActionsRemaining;
-    
-    [Header("Game State")]
-    public bool isPlayerTurn = true;
-    public bool isGameOver = false;
-    
-    [Header("References")]
+
+    [Header("Referências do Jogo")]
     public Player currentPlayer;
     public List<City> allCities = new List<City>();
-    
-    private GameManager gameManager;
-    
+    public CardManager baralhoDeJogadores; // Arraste o objeto do CardManager dos jogadores aqui no Inspector do Unity
+    public CardManager baralhoDeInfeccao; // Arraste o objeto do CardManager de infecção aqui
+
+    [Header("Condições de Vitória/Derrota")]
+    public bool isGameOver = false;
+
+    [Tooltip("Contador de surtos que ocorreram no jogo.")]
+    public int contadorDeSurtos = 0;
+    [Tooltip("O jogo acaba se o número de surtos atingir este valor.")]
+    public int limiteDeSurtos = 8;
+
+    [Tooltip("Dicionário que rastreia as curas descobertas.")]
+    public Dictionary<string, bool> curasDescobertas;
+    // ===================================================================
+
     void Start()
     {
         Debug.Log("[TurnManager] Iniciando TurnManager...");
-        
-        gameManager = FindObjectOfType<GameManager>();
-        if (gameManager == null)
-        {
-            Debug.LogError("[TurnManager] GameManager não encontrado na cena!");
-        }
-        
         InitializeCities();
         InitializePlayer();
+        
+        // Inicializa as variáveis de condição de jogo
+        InicializarCondicoesDeJogo();
+
         StartNewTurn();
     }
-    
-    void InitializeCities()
+
+    // Função para inicializar suas variáveis
+    void InicializarCondicoesDeJogo()
     {
-        Debug.Log("[TurnManager] Inicializando 15 cidades...");
-        
-        // Criar as 15 cidades numeradas de 1 a 15
-        for (int i = 1; i <= 15; i++)
+        contadorDeSurtos = 0;
+        isGameOver = false;
+        curasDescobertas = new Dictionary<string, bool>()
         {
-            City newCity = new City(i.ToString(), i);
-            allCities.Add(newCity);
-            Debug.Log($"[TurnManager] Cidade '{newCity.cityName}' criada com ID {newCity.cityId}");
-        }
-        
-        Debug.Log($"[TurnManager] {allCities.Count} cidades inicializadas com sucesso.");
+            { "Amarelo", false },
+            { "Vermelho", false },
+            { "Azul", false },
+            { "Preto", false }
+            // IMPORTANTE: As chaves aqui ("Amarelo", "Vermelho", etc.) devem ser
+            // exatamente as mesmas strings usadas no campo "diseaseType" da DiscoverCureAction
+        };
+        Debug.Log("[TurnManager] Condições de Vitória/Derrota inicializadas.");
     }
-    
-    void InitializePlayer()
-    {
-        if (currentPlayer == null)
-        {
-            currentPlayer = new Player();
-            currentPlayer.playerName = "Jogador";
-            currentPlayer.actionsRemaining = actionsPerTurn;
-            Debug.Log("[TurnManager] Jogador inicializado automaticamente.");
-        }
-        
-        Debug.Log($"[TurnManager] Jogador '{currentPlayer.playerName}' inicializado com {actionsPerTurn} ações por rodada.");
-    }
-    
-    public void StartNewTurn()
-    {
-        if (isGameOver)
-        {
-            Debug.LogWarning("[TurnManager] Tentativa de iniciar nova rodada com jogo finalizado!");
-            return;
-        }
-        
-        Debug.Log($"[TurnManager] Iniciando rodada {currentTurn}...");
-        
-        currentActionsRemaining = actionsPerTurn;
-        currentPlayer.actionsRemaining = actionsPerTurn;
-        isPlayerTurn = true;
-        
-        Debug.Log($"[TurnManager] Rodada {currentTurn} iniciada. Ações restantes: {currentActionsRemaining}");
-    }
-    
+
     public void EndPlayerTurn()
     {
-        if (!isPlayerTurn)
-        {
-            Debug.LogWarning("[TurnManager] Tentativa de finalizar rodada do jogador quando não é sua vez!");
-            return;
-        }
-        
+        if (!isPlayerTurn) return;
+
         Debug.Log("[TurnManager] Finalizando rodada do jogador...");
         isPlayerTurn = false;
+
+        // --- FASE DE COMPRA DE CARTAS ---
+ 
+        if (baralhoDeJogadores.deck.Count < 2)
+        {
+            FinalizarJogo("DERROTA! O tempo acabou! Não há cartas suficientes para comprar.");
+            return; 
+        }
         
-        // Executar fase de infecção
+        Debug.Log("[TurnManager] Jogador compraria 2 cartas.");
+
+
+        // --- FASE DE INFECÇÃO ---
         ExecuteInfectionPhase();
+
         
-        // Verificar condições de vitória/derrota
-        CheckGameConditions();
-        
-        // Iniciar próxima rodada se o jogo não acabou
         if (!isGameOver)
         {
             currentTurn++;
             StartNewTurn();
         }
     }
-    
+
+    public void CheckGameConditions()
+    {
+        if (isGameOver) return; 
+
+        // 1. CONDIÇÃO DE DERROTA: Surtos
+        if (contadorDeSurtos >= limiteDeSurtos)
+        {
+            FinalizarJogo("DERROTA! O número de surtos saiu de controle!");
+            return;
+        }
+
+        // CONDIÇÃO DE VITÓRIA: Todas as curas descobertas
+        if (curasDescobertas.Values.All(status => status == true))
+        {
+            FinalizarJogo("VITÓRIA! Todas as curas foram descobertas! O Rio de Janeiro está salvo!");
+            return;
+        }
+    }
+
+    public bool ChecarEstoqueDeCubos(string corDoCubo, int quantidade)
+    {
+        return false;
+    }
+
+
+    private void FinalizarJogo(string mensagem)
+    {
+        if (isGameOver) return; // Garante que a mensagem de fim de jogo apareça só uma vez
+
+        isGameOver = true;
+        Debug.LogError("--- FIM DE JOGO ---");
+        Debug.LogError(mensagem);
+        Time.timeScale = 0; // Pausa o jogo
+    }
+    // ===================================================================
+
+    // Funções de notificação que serão chamadas por outros scripts
+    public void NotificarSurto()
+    {
+        contadorDeSurtos++;
+        Debug.LogWarning($"[TurnManager] SURTO NOTIFICADO! Contagem atual: {contadorDeSurtos}/{limiteDeSurtos}");
+        CheckGameConditions(); // Verifica imediatamente se o limite foi atingido
+    }
+
+    public void NotificarCuraDescoberta(string corDaDoenca)
+    {
+        if (curasDescobertas.ContainsKey(corDaDoenca))
+        {
+            curasDescobertas[corDaDoenca] = true;
+            Debug.Log($"[TurnManager] CURA NOTIFICADA: {corDaDoenca}!");
+            CheckGameConditions(); // Verifica imediatamente se a condição de vitória foi atingida
+        }
+    }
+
+    #region Funções Originais do TurnManager
+    public bool isPlayerTurn = true;
+
+    void InitializeCities()
+    {
+        Debug.Log("[TurnManager] Inicializando 15 cidades...");
+        for (int i = 1; i <= 15; i++) { allCities.Add(new City(i.ToString(), i)); }
+        Debug.Log($"[TurnManager] {allCities.Count} cidades inicializadas com sucesso.");
+    }
+
+    void InitializePlayer()
+    {
+        if (currentPlayer == null) { currentPlayer = new Player(); }
+    }
+
+    public void StartNewTurn()
+    {
+        if (isGameOver) return;
+        Debug.Log($"[TurnManager] Iniciando rodada {currentTurn}...");
+        currentActionsRemaining = actionsPerTurn;
+        currentPlayer.actionsRemaining = actionsPerTurn;
+        isPlayerTurn = true;
+    }
+
     public bool CanPerformAction()
     {
         return isPlayerTurn && currentActionsRemaining > 0 && !isGameOver;
     }
-    
+
     public void UseAction()
     {
-        if (!CanPerformAction())
-        {
-            Debug.LogWarning("[TurnManager] Tentativa de usar ação quando não é permitido!");
-            return;
-        }
-        
+        if (!CanPerformAction()) return;
         currentActionsRemaining--;
         currentPlayer.actionsRemaining--;
-        
-        Debug.Log($"[TurnManager] Ação usada. Ações restantes: {currentActionsRemaining}");
-        
-        // Verificar se acabaram as ações
-        if (currentActionsRemaining <= 0)
-        {
-            Debug.Log("[TurnManager] Todas as ações foram usadas. Finalizando rodada do jogador...");
-            EndPlayerTurn();
-        }
+        if (currentActionsRemaining <= 0) { EndPlayerTurn(); }
     }
-    
+
     void ExecuteInfectionPhase()
     {
         Debug.Log("[TurnManager] Executando fase de infecção...");
-        
-        // Simular infecção em cidade aleatória
         if (allCities.Count > 0)
         {
             int randomIndex = Random.Range(0, allCities.Count);
             City infectedCity = allCities[randomIndex];
-            
             if (infectedCity.infectionLevel < infectedCity.maxInfectionLevel)
             {
                 infectedCity.Infect();
-                
-                // Se a cidade teve um outbreak, infectar cidades conectadas
-                if (infectedCity.isOutbreak)
-                {
-                    InfectConnectedCities(infectedCity);
-                }
-            }
-            else
-            {
-                Debug.Log($"[TurnManager] Cidade {infectedCity.cityName} já está no nível máximo de infecção.");
+                if (infectedCity.isOutbreak) { InfectConnectedCities(infectedCity); }
             }
         }
     }
-    
+
     void InfectConnectedCities(City outbreakCity)
     {
-        Debug.Log($"[TurnManager] Infectando cidades conectadas à {outbreakCity.cityName}...");
-        
         List<int> connectedIds = outbreakCity.GetConnectedCityIds();
         foreach (int connectedId in connectedIds)
         {
             City connectedCity = GetCityById(connectedId);
-            if (connectedCity != null)
-            {
-                connectedCity.Infect();
-                Debug.Log($"[TurnManager] Cidade conectada {connectedCity.cityName} foi infectada por outbreak.");
-            }
-            else
-            {
-                Debug.LogWarning($"[TurnManager] Cidade conectada com ID {connectedId} não encontrada!");
-            }
+            if (connectedCity != null) { connectedCity.Infect(); }
         }
     }
-    
-    void CheckGameConditions()
-    {
-        // Verificar se alguma cidade atingiu o nível máximo de infecção
-        foreach (City city in allCities)
-        {
-            if (city.infectionLevel >= city.maxInfectionLevel)
-            {
-                Debug.LogWarning($"[TurnManager] Cidade {city.cityName} atingiu o nível máximo de infecção! Jogo perdido.");
-                isGameOver = true;
-                return;
-            }
-        }
-        
-        // Verificar se todas as cidades estão curadas (vitória)
-        bool allCitiesCured = true;
-        foreach (City city in allCities)
-        {
-            if (city.infectionLevel > 0)
-            {
-                allCitiesCured = false;
-                break;
-            }
-        }
-        
-        if (allCitiesCured)
-        {
-            Debug.Log("[TurnManager] Todas as cidades foram curadas! Vitória!");
-            isGameOver = true;
-        }
-    }
-    
+
     public City GetCityByName(string cityName)
     {
-        foreach (City city in allCities)
-        {
-            if (city.cityName.Equals(cityName, System.StringComparison.OrdinalIgnoreCase))
-            {
-                return city;
-            }
-        }
-        return null;
+        return allCities.Find(city => city.cityName.Equals(cityName, System.StringComparison.OrdinalIgnoreCase));
     }
-    
+
     public City GetCityById(int cityId)
     {
-        foreach (City city in allCities)
-        {
-            if (city.cityId == cityId)
-            {
-                return city;
-            }
-        }
-        return null;
+        return allCities.Find(city => city.cityId == cityId);
     }
-} 
+    #endregion
+}

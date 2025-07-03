@@ -648,7 +648,7 @@ public class DiscoverCureAction : Action
         }
         
         // Marcar doença como curada (será implementado no GameManager)
-        // gameManager.CureDisease(diseaseType);
+        FindObjectOfType<TurnManager>().NotificarCuraDescoberta(diseaseType);
     }
 }
 
