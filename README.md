@@ -4,7 +4,15 @@ Repositório para o desenvolvimento do jogo de tabuleiro digital *Pandemic*, com
 
 ## Escopo do Projeto e Funcionalidades
 
-O objetivo deste projeto é criar uma versão digital do jogo cooperativo *Pandemic*, implementando suas principais mecânicas e regras.
+O objetivo deste projeto é criar uma versão digital do jogo cooperativo *Pandemic*, implementando suas principais mecânicas e regras com algumas modificações para simplificar o desenvolvimento do trabalho.
+
+### Tecnologias Utilizadas:
+
+* **GIT:** Utilizado para realizar versionamento do projeto.
+* **Github:** Plataforma para salvar repositório e modificações no código.
+* **Unity:** Desenvolver inteface gráfica do jogo.
+* **C#:** Linguagem usada para funciolidades do jogo.
+* **Visual Studio:** IDE para codificar com C# e Unity.
 
 ### Funcionalidades Planejadas:
 
@@ -16,7 +24,7 @@ O objetivo deste projeto é criar uma versão digital do jogo cooperativo *Pande
 * **Mecânica de Infecção:** O avanço das doenças será controlado por um baralho de cartas de infecção, que determinará onde novos surtos ocorrem.
 * **Condições de Vitória e Derrota:** O jogo terá regras claras para a vitória (erradicação de todas as doenças) e para a derrota (surtos excessivos ou esgotamento do baralho de jogadores).
 * **Modo Cooperativo:** Todas as mecânicas serão projetadas para um ambiente de jogo totalmente cooperativo, onde os jogadores trabalham juntos para alcançar um objetivo comum.
-* **Mapa e Doenças:** O jogo contará com um mapa global dividido em regiões, cada uma suscetível a doenças específicas. A velocidade de infecção e as epidemias aumentarão a dificuldade progressivamente.
+* **Mapa e Doenças:** O jogo contará com um mapa global dividido em regiões, cada uma suscetível a doenças específicas. A velocidade de infecção e as epidemias aumentarão a dificuldade progressivamente. O mapa e algumas mecânicas de infecção foram simplificadas para ajudar no desenvolvimento do projeto.
 * **Interface Visual:** Será desenvolvida uma interface gráfica para o usuário, permitindo uma interação clara e intuitiva com o tabuleiro e as ações do jogo.
 
 ## Equipe e Responsabilidades
