@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 public class CityCard : Card
 {
@@ -37,3 +37,4 @@ public class CityCard : Card
         }
     }
 }
+*/
