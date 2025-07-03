@@ -1,12 +1,21 @@
-// Arquivo: GameManager.cs
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement; // --- ADIÇÃO DE UI --- Importante para trocar de cena
+using TMPro;                       // --- ADIÇÃO DE UI --- Importante para controlar o texto
 
 public class GameManager : MonoBehaviour
 {
     [Header("Referências")]
     public CardManager cardManager;
+    
+    // --- ADIÇÃO DE UI 1: REFERÊNCIAS VISUAIS ---
+    [Header("Referências de UI")]
+    [Tooltip("Arraste o objeto de texto do contador de surtos para cá.")]
+    public TextMeshProUGUI outbreakCounterText;
+    [Tooltip("Arraste o painel de Fim de Jogo para cá.")]
+    public GameObject gameOverPanel;
+    // --- FIM DA ADIÇÃO DE UI 1 ---
 
     [Header("Estado do Jogo")]
     public int infectionRateValue = 2;
@@ -14,11 +23,9 @@ public class GameManager : MonoBehaviour
     public int infectionRateTrackIndex = 0;
     public int outbreakCounter = 0;
 
-    // --- NOVA ADIÇÃO 1: A LISTA DE ALTO RISCO ---
     [Header("High-Risk Pool")]
     [Tooltip("Regiões que foram infectadas recentemente e têm maior chance de serem sorteadas de novo.")]
     public List<RegionController> highRiskRegions = new List<RegionController>();
-    // --- FIM DA NOVA ADIÇÃO 1 ---
 
     private Dictionary<string, RegionController> regioesMap;
 
@@ -26,6 +33,13 @@ public class GameManager : MonoBehaviour
     {
         RegionController[] regioes = FindObjectsByType<RegionController>(FindObjectsSortMode.None);
         regioesMap = regioes.ToDictionary(r => r.regionName, r => r);
+
+        // --- ADIÇÃO DE UI 2: INICIALIZAÇÃO DA INTERFACE ---
+        // Garante que a tela de Fim de Jogo comece escondida e o contador com o valor certo.
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+        Time.timeScale = 1f; // Garante que o jogo não comece pausado.
+        UpdateOutbreakUI();
+        // --- FIM DA ADIÇÃO DE UI 2 ---
     }
     
     public RegionController FindRegionByName(string name)
@@ -38,62 +52,76 @@ public class GameManager : MonoBehaviour
     {
         outbreakCounter++;
         Debug.LogWarning($"[GameManager] Contador de Surtos aumentado para: {outbreakCounter}");
-        if (outbreakCounter >= 8) { Debug.LogError("LIMITE DE SURTOS ATINGIDO! FIM DE JOGO."); }
-    }
 
+        // --- ADIÇÃO DE UI 3: ATUALIZA O VISUAL ---
+        UpdateOutbreakUI();
+
+        if (outbreakCounter >= 8) 
+        {
+            ShowGameOverScreen(); // Mostra a tela de Fim de Jogo
+        }
+    }
     
-public void PassarRodada()
-{
-    Debug.LogError("--- TESTE DO BOTÃO: PassarRodada() FOI CHAMADO! ---");
-
-    if (cardManager == null)
+    public void PassarRodada()
     {
-        Debug.LogError("PROBLEMA: A referência ao `cardManager` no GameManager está NULA.");
-        return;
+        if (cardManager == null)
+        {
+            Debug.LogError("PROBLEMA: A referência ao `cardManager` no GameManager está NULA.");
+            return;
+        }
+
+        HashSet<RegionController> outbrokenThisTurn = new HashSet<RegionController>();
+
+        for (int i = 0; i < infectionRateValue; i++)
+        {
+            cardManager.PlayNextInfectionCard(this, outbrokenThisTurn);
+        }
     }
-
-    // CRIA A LISTA DE CONTROLE AQUI, UMA VEZ POR RODADA!
-    HashSet<RegionController> outbrokenThisTurn = new HashSet<RegionController>();
-
-    Debug.Log($" PASSO 2: Iniciando fase de infecção. Taxa de Infecção é {infectionRateValue}.");
-
-    for (int i = 0; i < infectionRateValue; i++)
-    {
-        // PASSA A LISTA DE CONTROLE PARA O MÉTODO
-        cardManager.PlayNextInfectionCard(this, outbrokenThisTurn);
-    }
-
-    Debug.Log("FIM: Fase de Infecção no GameManager concluída.");
-}
-
-    // --- NOVA ADIÇÃO 2: O MÉTODO DE SORTEIO INTELIGENTE ---
-    /// <summary>
-    /// Sorteia uma região para ser infectada, dando mais chance para as que estão na lista de alto risco.
-    /// </summary>
+    
     public RegionController GetRegionToInfectByWeight()
     {
-        // Se não houver nenhuma região no mapa, retorna nulo para evitar erros.
         if (regioesMap.Count == 0) return null;
 
-        // 1. Cria uma "piscina de sorteio" temporária.
         List<RegionController> drawPool = new List<RegionController>();
-
-        // 2. Adiciona TODAS as regiões do mapa na piscina. Usamos .Values do seu dicionário.
         drawPool.AddRange(regioesMap.Values);
-
-        // 3. Adiciona as regiões de ALTO RISCO na piscina NOVAMENTE, aumentando o peso delas.
         drawPool.AddRange(highRiskRegions);
-        drawPool.AddRange(highRiskRegions); // Adicionando mais uma vez para um efeito mais forte.
+        drawPool.AddRange(highRiskRegions);
 
-        // 4. Sorteia um "ticket" da piscina.
         int randomIndex = Random.Range(0, drawPool.Count);
         RegionController chosenRegion = drawPool[randomIndex];
 
-        // 5. Simula colocar a carta na "pilha de descarte" para aumentar a chance futura.
         highRiskRegions.Add(chosenRegion);
         Debug.Log($"[GameManager] A região {chosenRegion.regionName} foi sorteada e adicionada à piscina de alto risco.");
 
         return chosenRegion;
     }
-    // --- FIM DA NOVA ADIÇÃO 2 ---
+
+    // --- ADIÇÃO DE UI 4: NOVOS MÉTODOS PARA CONTROLAR O VISUAL ---
+    void UpdateOutbreakUI()
+    {
+        if (outbreakCounterText == null) return;
+
+        outbreakCounterText.text = outbreakCounter.ToString();
+
+        if (outbreakCounter >= 6) { outbreakCounterText.color = Color.red; }
+        else if (outbreakCounter >= 4) { outbreakCounterText.color = Color.yellow; }
+        else { outbreakCounterText.color = Color.white; }
+    }
+
+    void ShowGameOverScreen()
+    {
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+        }
+        Time.timeScale = 0f; // Pausa o jogo
+        Debug.LogError("LIMITE DE SURTOS ATINGIDO! FIM DE JOGO.");
+    }
+
+    public void ReturnToMenu()
+    {
+        Time.timeScale = 1f; // Despausa o jogo antes de trocar de cena
+        SceneManager.LoadScene("MenuScene"); // Lembre-se que o nome da cena deve ser exato
+    }
+    // --- FIM DA ADIÇÃO DE UI 4 ---
 }
