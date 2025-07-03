@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      pandemic_background_0: 7304285820782466801
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -30,7 +30,7 @@ public abstract class Action : MonoBehaviour
         }
     }
     
-    public virtual bool CanExecute()
+    protected virtual bool CanExecute()
     {
         if (turnManager == null || currentPlayer == null)
         {
