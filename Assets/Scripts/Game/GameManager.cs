@@ -1,41 +1,61 @@
+// Arquivo: GameManager.cs
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
-{    private RegionController[] regioes;
+{
+    [Header("Referências")]
+    public CardManager cardManager;
+
+    [Header("Estado do Jogo")]
+    public int infectionRateValue = 2;
+    public int[] infectionRateTrack = { 2, 2, 2, 3, 3, 4, 4 };
+    public int infectionRateTrackIndex = 0;
+    public int outbreakCounter = 0;
+
+    private Dictionary<string, RegionController> regioesMap;
+
     void Start()
     {
-        Debug.Log("[GameManager] Iniciando GameManager...");
-        // Captura todas as regiões na cena no início
-        regioes = FindObjectsByType<RegionController>(FindObjectsSortMode.None);
-        Debug.Log($"[GameManager] Encontradas {regioes.Length} regiões na cena.");
+        // ... seu código Start ...
+        RegionController[] regioes = FindObjectsByType<RegionController>(FindObjectsSortMode.None);
+        regioesMap = regioes.ToDictionary(r => r.regionName, r => r);
     }
-    public void PassarRodada()
+    
+    public RegionController FindRegionByName(string name)
     {
-        Debug.LogError("--- PassarRodada() FOI CHAMADO! ---");
-        Debug.Log("[GameManager] Método PassarRodada() chamado.");
-        if (regioes == null || regioes.Length == 0)
+        regioesMap.TryGetValue(name, out RegionController region);
+        return region;
+    }
+    
+    public void IncrementOutbreakCounter()
+    {
+        outbreakCounter++;
+        Debug.LogWarning($"[GameManager] Contador de Surtos aumentado para: {outbreakCounter}");
+        if (outbreakCounter >= 8) { Debug.LogError("LIMITE DE SURTOS ATINGIDO! FIM DE JOGO."); }
+    }
+
+    public void PassarRodada()
+    {   
+        Debug.LogError("--- TESTE DO BOTÃO: PassarRodada() FOI CHAMADO! ---");
+        Debug.Log(" PASSO 1: O botão foi clicado e `PassarRodada` no GameManager foi chamado.");
+
+        if (cardManager == null)
         {
-            Debug.LogWarning("[GameManager] Nenhuma região encontrada para passar a rodada!");
+            Debug.LogError("PROBLEMA: A referência ao `cardManager` no GameManager está NULA. Arraste o objeto no Inspector.");
             return;
         }
 
-        // Escolhe uma região aleatória
-        int indice = Random.Range(0, regioes.Length);
-        RegionController regiaoEscolhida = regioes[indice];
+        Debug.Log($" PASSO 2: Iniciando fase de infecção. Taxa de Infecção é {infectionRateValue}. O loop vai rodar {infectionRateValue} vezes.");
         
-        if (regiaoEscolhida == null)
+        for (int i = 0; i < infectionRateValue; i++)
         {
-            Debug.LogError($"[GameManager] Região escolhida no índice {indice} é nula! Verifique a lista de regiões.");
-            return;
+            Debug.Log($" PASSO 3 (Loop {i + 1}/{infectionRateValue}): Chamando `PlayNextInfectionCard` no CardManager.");
+            cardManager.PlayNextInfectionCard(this);
+            Debug.Log($" PASSO 3.1 (Loop {i + 1}/{infectionRateValue}): Retornou da chamada ao CardManager.");
         }
         
-        Debug.Log($"[GameManager] Região aleatória escolhida: {regiaoEscolhida.regionName} (Índice: {indice})");
-
-        // Aplica o efeito (Lembre-se da correção de "infectar" para "infect")
-        string efeitoParaAplicar = "infect"; // Corrigido de "infectar"
-        Debug.Log($"[GameManager] Aplicando efeito '{efeitoParaAplicar}' na região '{regiaoEscolhida.regionName}'.");
-        regiaoEscolhida.ApplyEffect(efeitoParaAplicar);
-
-        Debug.Log($"[GameManager] Rodada passou. Região afetada (tentativa): {regiaoEscolhida.regionName}");
+        Debug.Log("FIM: Fase de Infecção no GameManager concluída.");
     }
 }
