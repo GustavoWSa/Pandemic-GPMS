@@ -36,3 +36,21 @@ O desenvolvimento do projeto foi dividido entre os seguintes membros da equipe:
 **Universidade Federal Fluminense (UFF)**
 **Disciplina:** GPMS
 **Período:** 2025.1
+
+## Como Rodar o Projeto
+
+1. Certifique-se de ter o [Unity Hub](https://unity.com/download) instalado.
+2. Abra o Unity Hub e clique em "Adicionar" para selecionar a pasta deste repositório.
+3. Abra o projeto com a versão recomendada do Unity (ex: 2022.x ou superior).
+4. No editor do Unity, abra a cena desejada em `Assets/Scenes/` (ex: `MenuScene.unity` ou `SampleScene.unity`).
+5. Clique em "Play" para iniciar o jogo.
+
+> **Dica:** Certifique-se de que todas as dependências do projeto estão instaladas (TextMeshPro, etc).
+
+## Controles Básicos
+
+- Use o mouse para interagir com os botões do menu.
+- Cada jogador pode realizar até 4 ações por turno.
+- Clique nas regiões do mapa para tratar doenças ou realizar ações específicas.
+- Use o botão "Passar Rodada" para avançar o turno.
+- O botão "Sobre" no menu leva a uma tela com explicações sobre o jogo.
